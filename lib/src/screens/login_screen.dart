@@ -9,36 +9,78 @@ class LoginScreen extends StatefulWidget {
 }
 
 class LoginScreenState extends State<LoginScreen> {
+  final formKey = GlobalKey<FormState>();
+
+  var email = '';
+  var password = '';
+
   Widget build(context) {
     return Container(
-      margin:EdgeInsets.all(20.0),
+      margin: EdgeInsets.all(20.0),
       child: Form(
-        child:Column(
-          children: [
-            emailField(),
-            //passwordField(),
-            //summitButton(),
-          ]
-        ),
+        key: formKey,
+        child: Column(children: [
+          emailField(),
+          passwordField(),
+          Container(margin: EdgeInsets.only(top: 25.0)),
+          summitButton(),
+        ]),
       ),
     );
   }
 
   Widget emailField() {
     return TextFormField(
+      keyboardType: TextInputType.emailAddress,
       decoration: InputDecoration(
         labelText: 'Email Address',
         hintText: 'you@example.com',
       ),
+      
+      validator: (String value) {
+        //devuelver null si es valido
+        //devolver un string con el mensaje de error si no es valido
+        if (!value.contains('@')) {
+          return 'Please enter a valid mail';
+        }
+      },
+
+      onSaved: (String value) {
+        email = value;
+      },
     );
   }
-/*
+
   Widget passwordField() {
-    return
+    return TextFormField(
+      obscureText: false,
+      decoration: InputDecoration(
+        labelText: 'Password',
+        hintText: 'Password',
+      ),
+      
+      validator: (String value) {
+        if (value.length < 4) {
+          return 'Please enter a valid password';
+        }
+      },
+
+      onSaved: (String value) {
+        password = value;
+      },
+    );
   }
 
   Widget summitButton() {
-    return
+    return RaisedButton(
+      color: Colors.red,
+      child: Text('Summit!'),
+      onPressed: () {
+        if (formKey.currentState.validate()) {
+          formKey.currentState.save();
+          print('email: $email, pass: $password');
+        }
+      },
+    );
   }
-  */
 }
